@@ -270,6 +270,7 @@ public class PlayerControlView extends FrameLayout {
   @Nullable private final View nextButton;
   @Nullable private final View playButton;
   @Nullable private final View pauseButton;
+  @Nullable private final View captionButton;
   @Nullable private final View fastForwardButton;
   @Nullable private final View rewindButton;
   @Nullable private final ImageView repeatToggleButton;
@@ -423,6 +424,11 @@ public class PlayerControlView extends FrameLayout {
     if (pauseButton != null) {
       pauseButton.setOnClickListener(componentListener);
     }
+    captionButton = findViewById(R.id.exo_caption);
+    if (captionButton != null) {
+      captionButton.setOnClickListener(componentListener);
+    }
+
     previousButton = findViewById(R.id.exo_prev);
     if (previousButton != null) {
       previousButton.setOnClickListener(componentListener);
@@ -1309,6 +1315,27 @@ public class PlayerControlView extends FrameLayout {
       updateNavigation();
       updateTimeline();
     }
+/*
+ private var subtitlesEnabled = true
+    private fun disableSubtitles() {
+        subtitlesEnabled = !subtitlesEnabled
+        (0 until (trackSelector?.currentMappedTrackInfo?.rendererCount ?: 0)).filter { position ->
+            player?.getRendererType(position) == C.TRACK_TYPE_TEXT
+        }.map { position ->
+            val params = trackSelector?.buildUponParameters()
+                    ?.setRendererDisabled(position, subtitlesEnabled)
+                    ?.clearSelectionOverrides(position)
+                    ?.build()
+            params?.let {
+                trackSelector?.parameters = it
+            }
+
+        }
+    }
+ */
+    public void subtitlesToggled() {
+
+    }
 
     @Override
     public void onClick(View view) {
@@ -1316,6 +1343,7 @@ public class PlayerControlView extends FrameLayout {
       if (player == null) {
         return;
       }
+
       if (nextButton == view) {
         next(player);
       } else if (previousButton == view) {
@@ -1324,6 +1352,10 @@ public class PlayerControlView extends FrameLayout {
         fastForward(player);
       } else if (rewindButton == view) {
         rewind(player);
+
+      } else if (captionButton == view)
+      {
+        subtitlesToggled();
       } else if (playButton == view) {
         if (player.getPlaybackState() == Player.STATE_IDLE) {
           if (playbackPreparer != null) {
