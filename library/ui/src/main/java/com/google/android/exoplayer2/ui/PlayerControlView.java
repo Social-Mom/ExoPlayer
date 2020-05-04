@@ -37,6 +37,7 @@ import com.google.android.exoplayer2.ExoPlayerLibraryInfo;
 import com.google.android.exoplayer2.PlaybackPreparer;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.exoplayer2.util.RepeatModeUtil;
 import com.google.android.exoplayer2.util.Util;
@@ -234,6 +235,15 @@ public class PlayerControlView extends FrameLayout {
     void onVisibilityChange(int visibility);
   }
 
+  public interface SubtitlesUpdateListener {
+
+    /**
+     * Called when subtitles button tapped.
+     *
+     */
+    void onSubtitlesToggled();
+
+  }
   /** Listener to be notified when progress has been updated. */
   public interface ProgressUpdateListener {
 
@@ -303,6 +313,7 @@ public class PlayerControlView extends FrameLayout {
   private com.google.android.exoplayer2.ControlDispatcher controlDispatcher;
   @Nullable private ProgressUpdateListener progressUpdateListener;
   @Nullable private PlaybackPreparer playbackPreparer;
+  @Nullable private SubtitlesUpdateListener subtitlesUpdateListener;
 
   private boolean isAttachedToWindow;
   private boolean showMultiWindowTimeBar;
@@ -580,6 +591,15 @@ public class PlayerControlView extends FrameLayout {
    */
   public void setProgressUpdateListener(@Nullable ProgressUpdateListener listener) {
     this.progressUpdateListener = listener;
+  }
+
+  /**
+   * Sets the {@link SubtitlesUpdateListener}.
+   *
+   * @param listener The listener to be notified about when subtitles are toggled.
+   */
+  public void setSubtitlesUpdateListener(@Nullable SubtitlesUpdateListener listener) {
+    this.subtitlesUpdateListener = listener;
   }
 
   /**
@@ -1334,6 +1354,12 @@ public class PlayerControlView extends FrameLayout {
     }
  */
     public void subtitlesToggled() {
+
+      if(subtitlesUpdateListener != null){
+
+        subtitlesUpdateListener.onSubtitlesToggled();
+
+      }
 
     }
 
